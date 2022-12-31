@@ -6,11 +6,14 @@
  */ 
 
 #include "NXDisplay.h"
+#include "gpio.h"
+#include "pins.h"
+
 #include <string.h>
 
 static NXConfig *config;
 
-static uint8_t dispdata[NX_NUM_TUBES];
+static uint8_t dispdata[NX_SR_BYTES];
 
 void NXDisplay_loadData(uint16_t buf[NX_NUM_TUBES]) {
 	//  Put array of 9 digits (12 bits each) into the byte aligned display data buffer
@@ -19,7 +22,7 @@ void NXDisplay_loadData(uint16_t buf[NX_NUM_TUBES]) {
 		dispdata[j+1] = ((buf[i] >> 8) & 0xf) | ((buf[i+1] & 0xf) << 4);
 		dispdata[j+2] = (buf[i+1] >> 4) & 0xff;
 	}
-	dispdata[12] = buf[NX_SIGNTUBE_IDX] & 0xff;
+	dispdata[NX_SR_BYTES - 1] = buf[NX_SIGNTUBE_IDX] & 0xff;
 }
 
 void NXDisplay_updateDisp() {
@@ -74,7 +77,7 @@ void NXDisplay_dispStr(const char *text) {
 				case '.':
 				//config->dp_template = NX_DPR;
 				//config->dp_space = true;
-				buf[dig] |= config.dp_template; // TODO: recalc position if invalid
+				buf[dig] |= config->dp_template; // TODO: recalc position if invalid
 				if (config->dp_space)
 					dig--;
 			}

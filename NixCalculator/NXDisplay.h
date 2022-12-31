@@ -9,10 +9,13 @@
 #ifndef NXDISPLAY_H_
 #define NXDISPLAY_H_
 
+#include <stdint.h>
+
 #define NX_SIGNTUBE_IDX 8
 #define NX_NUM_TUBES 9
 
 #define NX_SR_BITS 107
+#define NX_SR_BYTES 13
 
 #define NX_DPR 0b100000000000;
 #define NX_DPL 0b010000000000;

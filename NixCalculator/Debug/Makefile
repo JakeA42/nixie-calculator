@@ -50,6 +50,7 @@ C_SRCS +=  \
 ../keypad.c \
 ../main.c \
 ../NeoPixel.c \
+../NXDisplay.c \
 ../SPI.c \
 ../SSDisplay.c
 
@@ -72,6 +73,7 @@ keymap.o \
 keypad.o \
 main.o \
 NeoPixel.o \
+NXDisplay.o \
 SPI.o \
 SSDisplay.o
 
@@ -87,6 +89,7 @@ keymap.o \
 keypad.o \
 main.o \
 NeoPixel.o \
+NXDisplay.o \
 SPI.o \
 SSDisplay.o
 
@@ -102,6 +105,7 @@ keymap.d \
 keypad.d \
 main.d \
 NeoPixel.d \
+NXDisplay.d \
 SPI.d \
 SSDisplay.d
 
@@ -117,6 +121,7 @@ keymap.d \
 keypad.d \
 main.d \
 NeoPixel.d \
+NXDisplay.d \
 SPI.d \
 SSDisplay.d
 
@@ -207,6 +212,13 @@ Device_Startup/system_samd21.o: ../Device_Startup/system_samd21.c
 	
 
 ./NeoPixel.o: .././NeoPixel.c
+	@echo Building file: $<
+	@echo Invoking: ARM/GNU C Compiler : 6.3.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21J17D__ -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+./NXDisplay.o: .././NXDisplay.c
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 6.3.1
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21J17D__ -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

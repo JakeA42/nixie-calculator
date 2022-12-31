@@ -279,7 +279,7 @@ void exec_cmd(const cmd_generic *cmd) {
 			// a
 		} else if ((cmd->cmd_type & CMD_TYPE_MASK) == CMD_TYPE_NUM) {
 			cmd_numeric *cmd_num = (cmd_numeric *)cmd;
-			cmd_num->num_func();
+			//cmd_num->num_func(NULL);
 		}
 	} else {
 		// TODO: unavailable command pressed

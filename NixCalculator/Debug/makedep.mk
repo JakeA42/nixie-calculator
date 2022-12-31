@@ -24,6 +24,8 @@ main.c
 
 NeoPixel.c
 
+NXDisplay.c
+
 SPI.c
 
 SSDisplay.c
