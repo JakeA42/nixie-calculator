@@ -12,6 +12,8 @@
 #define NX_SIGNTUBE_IDX 8
 #define NX_NUM_TUBES 9
 
+#define NX_SR_BITS 107
+
 #define NX_DPR 0b100000000000;
 #define NX_DPL 0b010000000000;
 #define NUM_TO_NX(x) (((x) == 0) ? (1) : (0b10000000000 >> (x)))

@@ -26,14 +26,12 @@ void NXDisplay_updateDisp() {
 	// TODO: Brightness setting
 	
 	#ifndef NX_USE_SERCOM
-	for (int i = 107; i >= 0; i--) {
-		//for (int j = 7; j >= 0; j--) {
+	for (int i = NX_SR_BITS; i >= 0; i--) {
 		gpio_set_pin(NXD_MOSI_PORT, NXD_MOSI_PIN, ((dispdata[i / 8] >> (i % 8)) & 1));
 		asm("nop\nnop\nnop\nnop\nnop");				// delay at least 100 ns
 		gpio_set_pin(NXD_SCK_PORT, NXD_SCK_PIN, 0);
 		asm("nop\nnop\nnop\nnop\nnop");				// delay at least 100 ns
 		gpio_set_pin(NXD_SCK_PORT, NXD_SCK_PIN, 1);
-		//}
 	}
 	asm("nop\nnop\nnop\nnop\nnop");				// delay at least 100 ns
 
@@ -76,7 +74,7 @@ void NXDisplay_dispStr(const char *text) {
 				case '.':
 				//config->dp_template = NX_DPR;
 				//config->dp_space = true;
-				buf[dig] |= config.dp_template; // Todo recalc position if invalid
+				buf[dig] |= config.dp_template; // TODO: recalc position if invalid
 				if (config->dp_space)
 					dig--;
 			}
@@ -84,5 +82,5 @@ void NXDisplay_dispStr(const char *text) {
 		firstChar = (text[i] != ' ') || firstChar;
 	}
 	NXDisplay_loadData(buf);
-	updateDisp();
+	NXDisplay_updateDisp();
 }

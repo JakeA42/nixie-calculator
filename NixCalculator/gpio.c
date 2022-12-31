@@ -41,7 +41,7 @@ void gpio_set_pin_dir(unsigned int port, unsigned long pin, int val) {
 			REG_PORT_DIRCLR0 = 1 << pin;
 			PORT->Group[port].PINCFG[pin].bit.INEN = 1;
 		} 
-		} else if (port == PORTB) {
+	} else if (port == PORTB) {
 		if (val == GPIO_DIR_OUT) {
 			REG_PORT_DIRSET1 = 1 << pin;
 			PORT->Group[port].PINCFG[pin].bit.INEN = 0;

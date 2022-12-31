@@ -291,7 +291,6 @@ int main(void) {
 	gpio_set_pin(GPIO(PWR_LED), 1);
 	gpio_set_pin(GPIO(BUSY_LED), 1);
 	ClocksInit();
-	gpio_set_pin(GPIO(BUSY_LED), 0);
 
 	LvPeripheralsInit();
 
@@ -299,23 +298,24 @@ int main(void) {
 	NeoPixel_init();
 
 	SysTick_Config(4800ul);
+	gpio_set_pin(GPIO(BUSY_LED), 0);
 
 	while (1) {
-		//modifierfsm();
-		//sys_state.sys.modifiers.shift = (io_devices.keypad.rawKeys & KEY_MOD_SHIFT_IDX) ? mod_active : mod_inactive;
-		//sys_state.sys.modifiers.hyp = (io_devices.keypad.rawKeys & KEY_MOD_HYP_IDX) ? mod_active : mod_inactive;
-		//uint64_t keys = io_devices.keypad.changed; // keypad_get_presses();
-		//process_modifiers();
+		// Clear modifier keys if needed
 		if (sys_state.sys.modifiers.shift == mod_held && !(io_devices.keypad.rawKeys & KEY_MOD_SHIFT_IDX)) {
 			 sys_state.sys.modifiers.shift = mod_inactive;
 		}
 		if (sys_state.sys.modifiers.hyp == mod_held && !(io_devices.keypad.rawKeys & KEY_MOD_HYP_IDX)) {
 			 sys_state.sys.modifiers.hyp = mod_inactive;
 		}
+		// Process a key press and run the command
 		cmd_generic *pressed_cmd = process_keypress();
 		if (pressed_cmd) {
+			gpio_set_pin(GPIO(BUSY_LED), 1);
 			exec_cmd(pressed_cmd);
+			gpio_set_pin(GPIO(BUSY_LED), 0);
 		}
+		
 		normal_keypad_lighting();
 		
 		
