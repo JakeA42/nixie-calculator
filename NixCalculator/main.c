@@ -59,17 +59,7 @@ struct {
 	//
 //} system_status;
 
-typedef struct {
-	uint16_t duration_ms;
-	uint16_t freq_hz;
-	uint8_t start;
-} tone_req_t;
 
-tone_req_t tone_request = {
-	.duration_ms = 10,
-	.freq_hz = 1000,
-	.start = 0
-};
 
 void SysTick_Handler(void) {
 	static unsigned int tickCountSci = 0, tickCountKeys = 0;
@@ -82,79 +72,33 @@ void SysTick_Handler(void) {
 	if (tickCountKeys > 10) {
 		tickCountKeys = 0;
 		keypad_scan_keys();
-		//if (io_devices.keypad.changed) {
-			//
-			//io_devices.keypad.changed = 0;
-		//}
 	}
-	//if (tone_request.start) {
-		//// PB16 = speaker (TC6 WO[0])
-		//tone_timer = 0;
-		//TC6.COUNT16.
-	//}
-	//if (tone_timer < tone_request.duration_ms) {
-		//
-	//}
+	buzzer_tick();
 	systick_timer_ms++;
 }
 
 void mainfsm() {
-	enum {main_input, main_calc, main_menu};
-	static int state = main_input;
+	enum {uimode_normal, uimode_mainmenu};
+	static int state = uimode_normal;
 	
 	switch (state) {
-		case main_input:
-		if (false) {}
+		case uimode_normal:
+		
 		break;
-		case main_calc:
-		break;
-		case main_menu:
+		case uimode_mainmenu:
 		break;
 	}
-}
-void modifierfsm() {
-	//enum {mod_inactive, mod_active, mod_held};
-	static enum modifier_state shiftstate = mod_inactive;
-	
-	switch (shiftstate) {
-		case mod_inactive: {
-			if (io_devices.keypad.changed & KEY_MOD_SHIFT_IDX) {
-				shiftstate = mod_active;
-			}
-			break;
-		}
-		case mod_active: {
-			if (io_devices.keypad.changed & KEY_MOD_SHIFT_IDX) {
-				shiftstate = mod_inactive;
-			} else if (io_devices.keypad.changed & ~KEY_MOD_HYP_IDX) {
-				shiftstate = mod_held;
-			}
-			break;
-		}
-		case mod_held: {
-			if (!(io_devices.keypad.rawKeys & KEY_MOD_SHIFT_IDX)) {
-				shiftstate = mod_inactive;
-			}
-			break;
-		}
-	}
-	sys_state.sys.modifiers.shift = (shiftstate == mod_inactive) ? mod_inactive : mod_active;
 }
 
 void GpioInit() {
-	//gpio_set_pin_dir(PWR_LED_PORT, PWR_LED_PIN, GPIO_DIR_OUT);
-	//gpio_set_pin_dir(BUSY_LED_PORT, BUSY_LED_PORT, GPIO_DIR_OUT);
-	//gpio_set_pin_drvstr(PWR_LED_PORT, PWR_LED_PIN, 1);
-	//gpio_set_pin_drvstr(BUSY_LED_PORT, BUSY_LED_PORT, 1);
 	gpio_set_pin_dir(GPIO(PWR_LED), GPIO_DIR_OUT);
 	gpio_set_pin_dir(GPIO(BUSY_LED), GPIO_DIR_OUT);
 	gpio_set_pin_drvstr(GPIO(PWR_LED), 1);
 	gpio_set_pin_drvstr(GPIO(BUSY_LED), 1);
 	gpio_set_pin_dir(GPIO(PWR_CTRL), GPIO_DIR_OUT);
-		
 }
 
-void enablePwr() {
+void enable_pwr() {
 	// TODO: check voltage level
 	gpio_set_pin(GPIO(PWR_CTRL), 1);
 }
@@ -166,11 +110,10 @@ void LvPeripheralsInit() {
 }
 
 void HvPeripheralsInit() {
-	enablePwr();
+	enable_pwr();
 	
 	NeoPixel_init();
-	keypad_init(&io_devices.keypad);
-	build_keymap();
+	// TODO: NX init
 }
 
 
@@ -294,7 +237,7 @@ int main(void) {
 
 	LvPeripheralsInit();
 
-	enablePwr();
+	enable_pwr();
 	NeoPixel_init();
 
 	SysTick_Config(4800ul);
