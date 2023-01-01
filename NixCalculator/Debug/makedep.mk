@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+buzzer.c
+
 clocks.c
 
 colors.c

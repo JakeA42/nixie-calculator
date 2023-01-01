@@ -12,8 +12,7 @@
  * Based on code from Luca Davidian
  * http://www.lucadavidian.com/2018/03/08/wifi-controlled-neo-pixels-strips/
  */
-void ws2812_SPI_init()
-{
+void ws2812_SPI_init() {
 	/* enable peripheral clock */
 	PM->APBCMASK.bit.SERCOM2_ = 1;
 	

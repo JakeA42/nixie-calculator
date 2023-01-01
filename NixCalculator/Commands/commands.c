@@ -12,7 +12,7 @@ static int binary_op_availableQ(const calc_state_t * calc_state, const sys_state
 	return 1; // TODO: implement availability
 }
 static int unary_op_availableQ(const calc_state_t * calc_state, const sys_state_t * sys_state) {
-	return 1; // TODO: implement availability
+	return 0; // TODO: implement availability
 }
 static int available_always(const calc_state_t * calc_state, const sys_state_t * sys_state) {
 	return 1; // TODO: implement availability
@@ -120,7 +120,7 @@ const cmd_op * const cmd_mul = &(cmd_op) {
 
 const cmd_op * const cmd_sin = &(cmd_op) {
 	.cmd_type = CMD_TYPE_OP | CMD_SUBTYPE_MATH_OP,
-	.available = binary_op_availableQ,
+	.available = unary_op_availableQ,
 	.num_operands = 1,
 	.op_func = cmd_add_func
 };

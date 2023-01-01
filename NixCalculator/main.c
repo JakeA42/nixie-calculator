@@ -12,6 +12,7 @@
 #include "SSDisplay.h"
 #include "keymap.h"
 #include "keypad.h"
+#include "buzzer.h"
 #include "NeoPixel.h"
 #include "clocks.h"
 #include "colors.h"
@@ -20,6 +21,12 @@
 #include <stdint.h>
 
 #include <stdbool.h>
+
+uint16_t tone_good_freq = 1400;
+uint16_t tone_good_duration = 20;
+uint16_t tone_bad_freq = 700;
+uint16_t tone_bad_duration = 30;
+
 
 sys_state_t sys_state = {
 	.settings = {
@@ -63,7 +70,6 @@ struct {
 
 void SysTick_Handler(void) {
 	static unsigned int tickCountSci = 0, tickCountKeys = 0;
-	static uint16_t tone_timer = 0;
 	tickCountSci++; tickCountKeys++;
 	if (tickCountSci > io_devices.ssd.update_period_ticks) {
 		tickCountSci = 0;
@@ -73,7 +79,7 @@ void SysTick_Handler(void) {
 		tickCountKeys = 0;
 		keypad_scan_keys();
 	}
-	buzzer_tick();
+	buzzer_timer_tick();
 	systick_timer_ms++;
 }
 
@@ -107,6 +113,8 @@ void LvPeripheralsInit() {
 	SSD_init(&io_devices.ssd);
 	keypad_init(&io_devices.keypad);
 	build_keymap();
+	
+	buzzer_init();
 }
 
 void HvPeripheralsInit() {
@@ -180,10 +188,12 @@ cmd_generic *process_keypress() {
 					// Set modifiers if button pressed. If modifier is already active, let it be changed to 'held'
 					if (modifier == KEY_TYPE_SHIFT && !sys_state.sys.modifiers.shift) {
 						sys_state.sys.modifiers.shift = mod_active;
+						BUZZER_TONE_GOOD();
 						return NULL; // No command
 					}
 					if (modifier == KEY_TYPE_HYP && !sys_state.sys.modifiers.hyp) {
 						sys_state.sys.modifiers.hyp = mod_active;
+						BUZZER_TONE_GOOD();
 						return NULL; // No command
 					}
 				}
@@ -214,6 +224,7 @@ cmd_generic *process_keypress() {
 
 void exec_cmd(const cmd_generic *cmd) {
 	if (cmd->available && cmd->available(&calc_state, &sys_state)) {
+		BUZZER_TONE_GOOD();
 		// check command type
 		if ((cmd->cmd_type & CMD_TYPE_MASK) == CMD_TYPE_OP) {
 			cmd_op *op = (cmd_op *)cmd;
@@ -225,6 +236,7 @@ void exec_cmd(const cmd_generic *cmd) {
 			//cmd_num->num_func(NULL);
 		}
 	} else {
+		BUZZER_TONE_BAD();
 		// TODO: unavailable command pressed
 	}
 }
@@ -261,15 +273,5 @@ int main(void) {
 		
 		normal_keypad_lighting();
 		
-		
-		//for (int i = 0; i < 240000UL; i++) {}
-		//for (int j = 0; j < 7; j++) {
-			//for (int i = 0; i < NUM_PIXELS; i++) {
-				//NeoPixel_set_pixel(i, colors[j].r, colors[j].g, colors[j].b);
-				//NeoPixel_update();
-				//for (int i = 0; i < 960000UL; i++) {}
-			//}
-			//
-		//}
 	}
 }

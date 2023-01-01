@@ -39,6 +39,7 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../buzzer.c \
 ../clocks.c \
 ../colors.c \
 ../Commands/commands.c \
@@ -62,6 +63,7 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+buzzer.o \
 clocks.o \
 colors.o \
 Commands/commands.o \
@@ -78,6 +80,7 @@ SPI.o \
 SSDisplay.o
 
 OBJS_AS_ARGS +=  \
+buzzer.o \
 clocks.o \
 colors.o \
 Commands/commands.o \
@@ -94,6 +97,7 @@ SPI.o \
 SSDisplay.o
 
 C_DEPS +=  \
+buzzer.d \
 clocks.d \
 colors.d \
 Commands/commands.d \
@@ -110,6 +114,7 @@ SPI.d \
 SSDisplay.d
 
 C_DEPS_AS_ARGS +=  \
+buzzer.d \
 clocks.d \
 colors.d \
 Commands/commands.d \
@@ -141,6 +146,13 @@ LINKER_SCRIPT_DEP+=  \
 
 
 # AVR32/GNU C Compiler
+./buzzer.o: .././buzzer.c
+	@echo Building file: $<
+	@echo Invoking: ARM/GNU C Compiler : 6.3.1
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\arm\arm-gnu-toolchain\bin\arm-none-eabi-gcc.exe$(QUOTE)  -x c -mthumb -D__SAMD21J17D__ -DDEBUG  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\arm\CMSIS\5.4.0\CMSIS\Core\Include" -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include"  -Og -ffunction-sections -mlong-calls -g3 -Wall -mcpu=cortex-m0plus -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 ./clocks.o: .././clocks.c
 	@echo Building file: $<
 	@echo Invoking: ARM/GNU C Compiler : 6.3.1
