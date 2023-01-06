@@ -77,6 +77,16 @@
 
 
 
+/* Front panel lights */
+#define FPLIGHT_MOSI_PORT PORTB
+#define FPLIGHT_MOSI_PIN  14
+#define FPLIGHT_SCK_PORT PORTB
+#define FPLIGHT_SCK_PIN  15
+#define FPLIGHT_OE_PORT PORTA
+#define FPLIGHT_OE_PIN  28
+#define FPLIGHT_LATCH_PORT PORTA
+#define FPLIGHT_LATCH_PIN  27
+
 /* Backlight */
 #define BACKLIGHT_SERCOM SERCOM2
 #define BACKLIGHT_MOSI_PAD	0

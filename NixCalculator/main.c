@@ -13,6 +13,8 @@
 #include "keymap.h"
 #include "keypad.h"
 #include "buzzer.h"
+#include "indicatorlights.h"
+#include "NXDisplay.h"
 #include "NeoPixel.h"
 #include "clocks.h"
 #include "colors.h"
@@ -60,13 +62,10 @@ struct {
 	keypad		keypad;
 } io_devices;
 
-//struct {
-	//bool shift_state;
-	//bool hyp_state;
-	//
-//} system_status;
-
-
+NXConfig nxconfig = {
+	.dp_space = 1,
+	.dp_template = NX_DPR
+};
 
 void SysTick_Handler(void) {
 	static unsigned int tickCountSci = 0, tickCountKeys = 0;
@@ -115,13 +114,14 @@ void LvPeripheralsInit() {
 	build_keymap();
 	
 	buzzer_init();
+	fplights_init();
 }
 
 void HvPeripheralsInit() {
 	enable_pwr();
 	
 	NeoPixel_init();
-	// TODO: NX init
+	NXDisplay_init(&nxconfig);
 }
 
 
@@ -166,6 +166,7 @@ void normal_keypad_lighting() {
 		}
 	}
 	NeoPixel_update();
+	fplights_show(&sys_state);
 }
 
 void process_modifiers() {
@@ -233,7 +234,9 @@ void exec_cmd(const cmd_generic *cmd) {
 			// a
 		} else if ((cmd->cmd_type & CMD_TYPE_MASK) == CMD_TYPE_NUM) {
 			cmd_numeric *cmd_num = (cmd_numeric *)cmd;
-			//cmd_num->num_func(NULL);
+			char buf[10] = " -0.00000";
+			buf[2] = '0'+cmd_num->number;
+			NXDisplay_dispStr(buf);
 		}
 	} else {
 		BUZZER_TONE_BAD();
@@ -248,9 +251,9 @@ int main(void) {
 	ClocksInit();
 
 	LvPeripheralsInit();
-
-	enable_pwr();
-	NeoPixel_init();
+	HvPeripheralsInit();
+	//enable_pwr();
+	//NeoPixel_init();
 
 	SysTick_Config(4800ul);
 	gpio_set_pin(GPIO(BUSY_LED), 0);

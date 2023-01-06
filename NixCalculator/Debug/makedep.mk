@@ -18,6 +18,8 @@ DMA.c
 
 gpio.c
 
+indicatorlights.c
+
 keymap.c
 
 keypad.c

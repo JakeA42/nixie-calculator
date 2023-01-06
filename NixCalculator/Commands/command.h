@@ -30,8 +30,8 @@ typedef int (*Operation)(calc_state_t *,sys_state_t *);
 //						  state
 typedef int (*AvailableQ)(const calc_state_t *, const sys_state_t *);
 
-//						   entry string
-typedef int (*NumericFunc)(void*);
+//						   registers, state, number
+typedef int (*NumericFunc)(calc_state_t *,sys_state_t *,int);
 
 
 

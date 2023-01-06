@@ -17,8 +17,8 @@
 #define NX_SR_BITS 107
 #define NX_SR_BYTES 13
 
-#define NX_DPR 0b100000000000;
-#define NX_DPL 0b010000000000;
+#define NX_DPR 0b100000000000
+#define NX_DPL 0b010000000000
 #define NUM_TO_NX(x) (((x) == 0) ? (1) : (0b10000000000 >> (x)))
 //#define NUM_TO_NX(x) (0b10 << (((x) == 0) ? 10 : (x)))
 #define NX_MINUS 0b10;
@@ -31,5 +31,5 @@ typedef struct {
 } NXConfig;
 
 void NXDisplay_dispStr(const char *text);
-
+void NXDisplay_init(NXConfig *nxconfig);
 #endif /* NXDISPLAY_H_ */

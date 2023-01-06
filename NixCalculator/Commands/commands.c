@@ -142,3 +142,68 @@ const cmd_op * const cmd_asinh = &(cmd_op) {
 	.num_operands = 1,
 	.op_func = cmd_add_func
 };
+
+
+static int cmd_stdnumber(calc_state_t * calc_state, sys_state_t * sys_state, int number) {
+	return 0;
+}
+const cmd_numeric * const cmd_0 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 0,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_1 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 1,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_2 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 2,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_3 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 3,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_4 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 4,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_5 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 5,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_6 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 6,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_7 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 7,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_8 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 8,
+	.num_func = cmd_stdnumber
+};
+const cmd_numeric * const cmd_9 = &(cmd_numeric) {
+	.cmd_type = CMD_TYPE_NUM,
+	.available = available_always,
+	.number = 9,
+	.num_func = cmd_stdnumber
+};

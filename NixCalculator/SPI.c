@@ -61,6 +61,7 @@ void nxdisp_SPI_init() {
 	SERCOM5->SPI.CTRLA.bit.DORD = 0x00;		// MSB first
 	SERCOM5->SPI.CTRLA.bit.MODE = 0x03;		// SPI master operation
 	SERCOM5->SPI.CTRLB.bit.CHSIZE = 0x00;	// 8 bit character size
+	
 	SERCOM5->SPI.BAUD.reg = 39;				// SPI frequency 600 kHz 48M/(2*600k) - 1
 	
 	// Enable the peripheral

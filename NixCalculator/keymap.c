@@ -79,8 +79,8 @@ void build_keymap() {
 	};
 	keypad_map[4] = (kp_key){ //re/im key
 		.key_type = KEY_TYPE_STD,
-		.base_cmd = (cmd_generic*)cmd_re_im, //TODO: re/im
-		.shift_cmd = (cmd_generic*)cmd_rec_pol, // TODO: rec/pol
+		.base_cmd = (cmd_generic*)cmd_re_im,
+		.shift_cmd = (cmd_generic*)cmd_rec_pol,
 		.hyp_cmd = NULL,
 		.shift_hyp_cmd = NULL,
 		.pixel_idx = 28,

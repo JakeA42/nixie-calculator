@@ -8,12 +8,16 @@
 #include "NXDisplay.h"
 #include "gpio.h"
 #include "pins.h"
-
+#include "SPI.h"
 #include <string.h>
+
+#define NX_USE_SERCOM
+
 
 static NXConfig *config;
 
 static uint8_t dispdata[NX_SR_BYTES];
+
 
 void NXDisplay_loadData(uint16_t buf[NX_NUM_TUBES]) {
 	//  Put array of 9 digits (12 bits each) into the byte aligned display data buffer
@@ -41,16 +45,33 @@ void NXDisplay_updateDisp() {
 	#else
 	for (int i = 12; i >= 0; i--) {
 		// Wait for data register to be ready
-		while (!SERCOM5->SPI.INTFLAG.bit.DRE && !SERCOM5->SPI.INTFLAG.bit.TXC);
 		SERCOM5->SPI.DATA.bit.DATA = dispdata[i];
+		while (!SERCOM5->SPI.INTFLAG.bit.DRE || !SERCOM5->SPI.INTFLAG.bit.TXC);
 	}
 	// Wait for data register to be ready
-	while (!SERCOM5->SPI.INTFLAG.bit.DRE && !SERCOM5->SPI.INTFLAG.bit.TXC);
+	//while (!SERCOM5->SPI.INTFLAG.bit.DRE || !SERCOM5->SPI.INTFLAG.bit.TXC);
 	#endif
 	gpio_set_pin(NXD_STR_PORT, NXD_STR_PIN, 0); // latch data (active low)
 	asm("nop\nnop\nnop\nnop\nnop");				// delay at least 100 ns
 	gpio_set_pin(NXD_STR_PORT, NXD_STR_PIN, 1);
 }
+
+void NXDisplay_init(NXConfig *nxconfig) {
+	config = nxconfig;
+	gpio_set_pin_dir(NXD_STR_PORT, NXD_STR_PIN, GPIO_DIR_OUT);
+	gpio_set_pin(NXD_STR_PORT, NXD_STR_PIN, 1);
+	#ifndef NX_USE_SERCOM
+	gpio_set_pin_dir(NXD_MOSI_PORT, NXD_MOSI_PIN, GPIO_DIR_OUT);
+	gpio_set_pin(NXD_MOSI_PORT, NXD_MOSI_PIN, 1);
+	gpio_set_pin_dir(NXD_SCK_PORT, NXD_SCK_PIN, GPIO_DIR_OUT);
+	gpio_set_pin(NXD_SCK_PORT, NXD_SCK_PIN, 1);
+	#else
+	nxdisp_SPI_init();
+	#endif
+	memset(dispdata, 0, sizeof(dispdata));
+	NXDisplay_updateDisp();
+}
+
 
 void NXDisplay_dispStr(const char *text) {
 	int firstChar = 0; // encountered the first character yet? (for allowing numbers with space)
@@ -64,22 +85,26 @@ void NXDisplay_dispStr(const char *text) {
 		else {
 			switch (text[i]) {
 				case '-':
-				if(!firstChar) {
-					buf[NX_SIGNTUBE_IDX] = NX_MINUS;
-				}
+					if(!firstChar) {
+						buf[NX_SIGNTUBE_IDX] = NX_MINUS;
+					}
 				break;
 				case '[':
-				buf[dig] |= NX_DPL;
+					buf[dig] |= NX_DPL;
 				break;
 				case ']':
-				buf[dig] |= NX_DPR;
+					buf[dig] |= NX_DPR;
+				break;
+				case ' ':
+					dig--;
 				break;
 				case '.':
-				//config->dp_template = NX_DPR;
-				//config->dp_space = true;
-				buf[dig] |= config->dp_template; // TODO: recalc position if invalid
-				if (config->dp_space)
-					dig--;
+					//config->dp_template = NX_DPR;
+					//config->dp_space = true;
+					buf[dig] |= config->dp_template; // TODO: recalc position if invalid
+					if (config->dp_space)
+						dig--;
+				break;
 			}
 		}
 		firstChar = (text[i] != ' ') || firstChar;
