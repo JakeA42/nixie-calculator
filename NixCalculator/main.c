@@ -234,6 +234,7 @@ void exec_cmd(const cmd_generic *cmd) {
 			// a
 		} else if ((cmd->cmd_type & CMD_TYPE_MASK) == CMD_TYPE_NUM) {
 			cmd_numeric *cmd_num = (cmd_numeric *)cmd;
+			// TMP:
 			char buf[10] = " -0.00000";
 			buf[2] = '0'+cmd_num->number;
 			NXDisplay_dispStr(buf);

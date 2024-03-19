@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <complex.h>
+// TODO: #include <quadmath.h> __complex128
 //temporary
 #define CALC_NUM_TYPE complex long double
 
