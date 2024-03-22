@@ -9,6 +9,7 @@
 #ifndef NXDISPLAY_H_
 #define NXDISPLAY_H_
 
+#include "types.h"
 #include <stdint.h>
 
 #define NX_SIGNTUBE_IDX 8
@@ -30,6 +31,7 @@ typedef struct {
 	uint16_t dp_template;
 } NXConfig;
 
+void NXDisplay_dispBuf(input_buffer_t *input, int lalign);
 void NXDisplay_dispStr(const char *text);
 void NXDisplay_init(NXConfig *nxconfig);
 #endif /* NXDISPLAY_H_ */

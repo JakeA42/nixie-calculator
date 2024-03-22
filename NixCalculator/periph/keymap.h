@@ -25,9 +25,11 @@
 #define KEY_TYPE_MENU_PWR 0x08
 #define KEY_TYPE_CLR 0x09
 
-typedef color_rgb (*SpecialColorQ)(const calc_state_t *,const sys_state_t *);
+typedef struct kp_key kp_key;
+typedef color_rgb (*SpecialColorQ)(const kp_key *, const calc_state_t *,const sys_state_t *);
 
-typedef struct {
+
+struct kp_key {
 	uint8_t key_type;
 	cmd_generic *base_cmd;
 	cmd_generic *shift_cmd;
@@ -35,11 +37,15 @@ typedef struct {
 	cmd_generic *shift_hyp_cmd;
 	int pixel_idx;
 	SpecialColorQ special_color;
-	} kp_key;
+};
+
 #define KEY_MOD_SHIFT_IDX (1ULL << 9)
 #define KEY_MOD_HYP_IDX (1ULL << 35)
 
 kp_key keypad_map[KEYPAD_GRID_SIZE];
+
+
+color_rgb standard_color(const kp_key * currentkey, const calc_state_t * calc_state, const sys_state_t * sys_state);
 
 void build_keymap();
 

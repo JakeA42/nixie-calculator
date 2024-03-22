@@ -8,7 +8,7 @@
 
 #ifndef INDICATORLIGHTS_H_
 #define INDICATORLIGHTS_H_
-#include "types.h"
+#include "../types.h"
 
 void fplights_init();
 void fplights_show(const sys_state_t *sys_state);

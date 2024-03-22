@@ -2,10 +2,6 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-buzzer.c
-
-clocks.c
-
 colors.c
 
 Commands\commands.c
@@ -14,23 +10,29 @@ Device_Startup\startup_samd21.c
 
 Device_Startup\system_samd21.c
 
-DMA.c
-
-gpio.c
-
-indicatorlights.c
-
-keymap.c
-
-keypad.c
-
 main.c
 
-NeoPixel.c
+mathcore\mathcore_float.c
 
-NXDisplay.c
+periph\buzzer.c
 
-SPI.c
+periph\clocks.c
 
-SSDisplay.c
+periph\DMA.c
+
+periph\gpio.c
+
+periph\indicatorlights.c
+
+periph\keymap.c
+
+periph\keypad.c
+
+periph\NeoPixel.c
+
+periph\NXDisplay.c
+
+periph\SPI.c
+
+periph\SSDisplay.c
 

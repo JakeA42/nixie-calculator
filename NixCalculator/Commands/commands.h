@@ -31,6 +31,11 @@ const cmd_numeric * const cmd_pi; // TODO: maybe cmd_op??
 // TODO: needs to be a hybrid command...
 const cmd_numeric * const cmd_chs;
 
+
+const cmd_op * const cmd_clear;
+const cmd_op * const cmd_clearall;
+const cmd_op * const cmd_bksp;
+
 // MODIFIER /////////////////
 //const cmd_op * const cmd_shift;
 //const cmd_op * const cmd_hyp;

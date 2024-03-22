@@ -9,6 +9,7 @@
 #include "gpio.h"
 #include "pins.h"
 #include "SPI.h"
+#include "../types.h"
 #include <string.h>
 
 #define NX_USE_SERCOM
@@ -72,6 +73,25 @@ void NXDisplay_init(NXConfig *nxconfig) {
 	NXDisplay_updateDisp();
 }
 
+void NXDisplay_dispBuf(input_buffer_t *input, int lalign) {
+	uint16_t buf[NX_NUM_TUBES];
+	memset(buf, 0, sizeof(buf));
+	if (input->main.sign < 0) {
+		buf[NX_SIGNTUBE_IDX] =  NX_MINUS;
+	}
+	for (int dig = 0, i = input->main.length - 1; i >= 0 && dig < NX_NUM_TUBES; i--, dig++) {
+		if (i == input->main.decimal) {
+			buf[dig] = NX_DPR;
+		} else {
+			buf[dig] = NUM_TO_NX(input->main.nums[i]);
+		}
+	}
+	if (input->main.length == 0) {
+		buf[0] = NUM_TO_NX(0);
+	}
+	NXDisplay_loadData(buf);
+	NXDisplay_updateDisp();
+}
 
 void NXDisplay_dispStr(const char *text) {
 	int firstChar = 0; // encountered the first character yet? (for allowing numbers with space)

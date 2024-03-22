@@ -7,16 +7,16 @@
 
 
 #include "sam.h"
-#include "pins.h"
-#include "gpio.h"
-#include "SSDisplay.h"
-#include "keymap.h"
-#include "keypad.h"
-#include "buzzer.h"
-#include "indicatorlights.h"
-#include "NXDisplay.h"
-#include "NeoPixel.h"
-#include "clocks.h"
+#include "periph/pins.h"
+#include "periph/gpio.h"
+#include "periph/SSDisplay.h"
+#include "periph/keymap.h"
+#include "periph/keypad.h"
+#include "periph/buzzer.h"
+#include "periph/indicatorlights.h"
+#include "periph/NXDisplay.h"
+#include "periph/NeoPixel.h"
+#include "periph/clocks.h"
 #include "colors.h"
 #include "Commands/command.h"
 #include "types.h"
@@ -37,11 +37,11 @@ sys_state_t sys_state = {
 	.sys = {
 		.angle_units = au_deg,
 		.sci_notation = sn_norm,
-		.entry_mode = em_rpn,
-		.modifiers = {
-			.shift = mod_inactive,
-			.hyp = mod_inactive
-		}
+		.entry_mode = em_rpn
+	},
+	.mods = {
+		.shift = mod_inactive,
+		.hyp = mod_inactive
 	},
 	.ui = {
 		.sci_active = sci_mant,
@@ -132,35 +132,34 @@ void normal_keypad_lighting() {
 		const kp_key *currentkey = &keypad_map[i];
 		if (currentkey->key_type != 0) {
 			// TODO: Menu lighting
-			// Modifiers always available (TODO: change this)
-			int available = (currentkey->key_type & KEY_TYPE_MOD_MASK) ? 1 : 0;
 			color_rgb c = color_off;
 			if (currentkey->special_color) {
 				// If the key has special color rules, apply that instead
-				c = currentkey->special_color(&calc_state, &sys_state);
+				c = currentkey->special_color(currentkey, &calc_state, &sys_state);
 			} else {
 				// Lighting depends on modifiers and command availability
-				if (sys_state.sys.modifiers.shift && sys_state.sys.modifiers.hyp) {
-					if (currentkey->shift_hyp_cmd && currentkey->shift_hyp_cmd->available != NULL) {
-						available = currentkey->shift_hyp_cmd->available(&calc_state, &sys_state);
-					}
-					c = available ? color_shift_hyp : color_shift_hyp_unavail;
-				} else if (sys_state.sys.modifiers.shift) {
-					if (currentkey->shift_cmd && currentkey->shift_cmd->available != NULL) {
-						available = currentkey->shift_cmd->available(&calc_state, &sys_state);
-					}
-					c = available ? color_shift : color_shift_unavail;
-				} else if (sys_state.sys.modifiers.hyp) {
-					if (currentkey->hyp_cmd && currentkey->hyp_cmd->available != NULL) {
-						available = currentkey->hyp_cmd->available(&calc_state, &sys_state);
-					}
-					c = available ? color_hyp : color_hyp_unavail;
-				} else {
-					if (currentkey->base_cmd && currentkey->base_cmd->available != NULL) {
-						available = currentkey->base_cmd->available(&calc_state, &sys_state);
-					}
-					c = available ? color_normal : color_normal_unavail;
-				}
+				c = standard_color(currentkey, &calc_state, &sys_state);
+				//if (sys_state.mods.shift && sys_state.mods.hyp) {
+					//if (currentkey->shift_hyp_cmd && currentkey->shift_hyp_cmd->available != NULL) {
+						//available = currentkey->shift_hyp_cmd->available(&calc_state, &sys_state);
+					//}
+					//c = available ? color_shift_hyp : color_shift_hyp_unavail;
+				//} else if (sys_state.mods.shift) {
+					//if (currentkey->shift_cmd && currentkey->shift_cmd->available != NULL) {
+						//available = currentkey->shift_cmd->available(&calc_state, &sys_state);
+					//}
+					//c = available ? color_shift : color_shift_unavail;
+				//} else if (sys_state.mods.hyp) {
+					//if (currentkey->hyp_cmd && currentkey->hyp_cmd->available != NULL) {
+						//available = currentkey->hyp_cmd->available(&calc_state, &sys_state);
+					//}
+					//c = available ? color_hyp : color_hyp_unavail;
+				//} else {
+					//if (currentkey->base_cmd && currentkey->base_cmd->available != NULL) {
+						//available = currentkey->base_cmd->available(&calc_state, &sys_state);
+					//}
+					//c = available ? color_normal : color_normal_unavail;
+				//}
 			}
 			NeoPixel_set_pixel(currentkey->pixel_idx, c.r, c.g, c.b);
 		}
@@ -187,34 +186,34 @@ cmd_generic *process_keypress() {
 				uint8_t modifier = (currentkey->key_type & KEY_TYPE_MOD_MASK);
 				if (modifier) {
 					// Set modifiers if button pressed. If modifier is already active, let it be changed to 'held'
-					if (modifier == KEY_TYPE_SHIFT && !sys_state.sys.modifiers.shift) {
-						sys_state.sys.modifiers.shift = mod_active;
+					if (modifier == KEY_TYPE_SHIFT && !sys_state.mods.shift) {
+						sys_state.mods.shift = mod_active;
 						BUZZER_TONE_GOOD();
 						return NULL; // No command
 					}
-					if (modifier == KEY_TYPE_HYP && !sys_state.sys.modifiers.hyp) {
-						sys_state.sys.modifiers.hyp = mod_active;
+					if (modifier == KEY_TYPE_HYP && !sys_state.mods.hyp) {
+						sys_state.mods.hyp = mod_active;
 						BUZZER_TONE_GOOD();
 						return NULL; // No command
 					}
 				}
 				
 				// find the command based on the modifiers
-				if (sys_state.sys.modifiers.shift && sys_state.sys.modifiers.hyp) {
+				if (sys_state.mods.shift && sys_state.mods.hyp) {
 					cmd = currentkey->shift_hyp_cmd;
-				} else if (sys_state.sys.modifiers.shift) {
+				} else if (sys_state.mods.shift) {
 					cmd = currentkey->shift_cmd;
-				} else if (sys_state.sys.modifiers.hyp) {
+				} else if (sys_state.mods.hyp) {
 					cmd = currentkey->hyp_cmd;
 				} else if (currentkey->base_cmd) {
 					cmd = currentkey->base_cmd;
 				}
 				// Set any modifiers to 'held'
-				if (sys_state.sys.modifiers.shift == mod_active) {
-					sys_state.sys.modifiers.shift = mod_held;
+				if (sys_state.mods.shift == mod_active) {
+					sys_state.mods.shift = mod_held;
 				}
-				if (sys_state.sys.modifiers.hyp == mod_active) {
-					sys_state.sys.modifiers.hyp = mod_held;
+				if (sys_state.mods.hyp == mod_active) {
+					sys_state.mods.hyp = mod_held;
 				}
 				return cmd;
 			}
@@ -235,10 +234,18 @@ void exec_cmd(const cmd_generic *cmd) {
 		} else if ((cmd->cmd_type & CMD_TYPE_MASK) == CMD_TYPE_NUM) {
 			cmd_numeric *cmd_num = (cmd_numeric *)cmd;
 			// TMP:
-			char buf[10] = " -0.00000";
-			buf[2] = '0'+cmd_num->number;
-			NXDisplay_dispStr(buf);
+			//char buf[10] = " -0.00000";
+			//buf[2] = '0'+cmd_num->number;
+			
+			cmd_num->num_func(&calc_state, &sys_state, cmd_num->number);
+			char buf[10] = "         ";
+			
+			//for (int i = calc_state.in_buffer.main.length - 1, j = 8; i >= 0; i--, j--) {
+				//buf[j] = calc_state.in_buffer.main.dispstr[i];
+			//}
+			//NXDisplay_dispStr(buf);
 		}
+		NXDisplay_dispBuf(&calc_state.in_buffer, 0);
 	} else {
 		BUZZER_TONE_BAD();
 		// TODO: unavailable command pressed
@@ -258,14 +265,16 @@ int main(void) {
 
 	SysTick_Config(4800ul);
 	gpio_set_pin(GPIO(BUSY_LED), 0);
+	
+	calc_state.in_buffer.main.decimal = -1;
 
 	while (1) {
 		// Clear modifier keys if needed
-		if (sys_state.sys.modifiers.shift == mod_held && !(io_devices.keypad.rawKeys & KEY_MOD_SHIFT_IDX)) {
-			 sys_state.sys.modifiers.shift = mod_inactive;
+		if (sys_state.mods.shift == mod_held && !(io_devices.keypad.rawKeys & KEY_MOD_SHIFT_IDX)) {
+			 sys_state.mods.shift = mod_inactive;
 		}
-		if (sys_state.sys.modifiers.hyp == mod_held && !(io_devices.keypad.rawKeys & KEY_MOD_HYP_IDX)) {
-			 sys_state.sys.modifiers.hyp = mod_inactive;
+		if (sys_state.mods.hyp == mod_held && !(io_devices.keypad.rawKeys & KEY_MOD_HYP_IDX)) {
+			 sys_state.mods.hyp = mod_inactive;
 		}
 		// Process a key press and run the command
 		cmd_generic *pressed_cmd = process_keypress();

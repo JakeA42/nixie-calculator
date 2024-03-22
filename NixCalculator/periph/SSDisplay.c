@@ -64,7 +64,7 @@ const uint8_t sciDispNumLUT[10] = {
 #define SSD_CHAR_U		(0			| SSD_SEG_B	| SSD_SEG_C	| SSD_SEG_D	| SSD_SEG_E	| SSD_SEG_F	| 0)
 #define SSD_CHAR_u		(0			| 0			| SSD_SEG_C	| SSD_SEG_D	| SSD_SEG_E	| 0			| 0)
 #define SSD_CHAR_V		(0			| 0			| SSD_SEG_C	| SSD_SEG_D	| SSD_SEG_E	| 0			| 0)
-
+#define SSD_CHAR_qm		(SSD_SEG_A	| SSD_SEG_B	| 0			| 0			| SSD_SEG_E	| 0			| SSD_SEG_G)
 
 
 
@@ -81,9 +81,8 @@ void SSD_dispStr(const char *text) {
 		}
 		if (text[i] >= '0' && text[i] <= '9') {
 			ssd->currentData[dig] = sciDispNumLUT[text[i] - '0'];
-			} else {
-			switch (text[i])
-			{
+		} else {
+			switch (text[i]) {
 				case ' ': ssd->currentData[dig] = 0; break;
 				case '.': dig++; ssd->currentData[dig] |= SSD_SEG_DP; break;
 				case '-': ssd->currentData[dig] = SSD_CHAR_MINUS; break;
@@ -117,6 +116,7 @@ void SSD_dispStr(const char *text) {
 				case 'U': ssd->currentData[dig] = SSD_CHAR_U; break;
 				case 'u': ssd->currentData[dig] = SSD_CHAR_u; break;
 				case 'V': ssd->currentData[dig] = SSD_CHAR_V; break;
+				case '?': ssd->currentData[dig] = SSD_CHAR_qm; break;
 				default:  ssd->currentData[dig] = 0; break;
 			}
 		}

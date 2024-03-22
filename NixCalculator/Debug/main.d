@@ -73,17 +73,20 @@ main.d main.o: .././main.c \
  C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/instance/usb.h \
  C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/instance/wdt.h \
  C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/pio/samd21j17d.h \
- .././pins.h \
+ .././periph/pins.h \
  C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/samd21.h \
- .././gpio.h .././SSDisplay.h .././keymap.h .././types.h \
+ .././periph/gpio.h .././periph/SSDisplay.h .././periph/keymap.h \
+ ../types.h \
+ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stdbool.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\complex.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\sys\cdefs.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stddef.h \
- .././keypad.h .././colors.h .././Commands/command.h \
- .././Commands/../types.h .././Commands/commands.h \
- .././Commands/command.h .././buzzer.h .././indicatorlights.h \
- .././NXDisplay.h .././NeoPixel.h .././clocks.h \
- c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stdbool.h
+ ../mathcore/mathcore.h .././periph/keypad.h ../colors.h \
+ ../Commands/command.h ../Commands/../types.h ../Commands/commands.h \
+ ../Commands/command.h .././periph/keypad.h .././periph/buzzer.h \
+ .././periph/indicatorlights.h .././periph/../types.h \
+ .././periph/NXDisplay.h .././periph/NeoPixel.h .././periph/clocks.h \
+ .././colors.h .././Commands/command.h .././types.h
 
 C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/sam.h:
 
@@ -233,17 +236,19 @@ C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d
 
 C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/pio/samd21j17d.h:
 
-.././pins.h:
+.././periph/pins.h:
 
 C:\Program\ Files\ (x86)\Atmel\Studio\7.0\Packs\atmel\SAMD21_DFP\1.3.395\samd21d\include/samd21.h:
 
-.././gpio.h:
+.././periph/gpio.h:
 
-.././SSDisplay.h:
+.././periph/SSDisplay.h:
 
-.././keymap.h:
+.././periph/keymap.h:
 
-.././types.h:
+../types.h:
+
+c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stdbool.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-none-eabi\include\complex.h:
 
@@ -251,26 +256,36 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\arm-no
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stddef.h:
 
-.././keypad.h:
+../mathcore/mathcore.h:
+
+.././periph/keypad.h:
+
+../colors.h:
+
+../Commands/command.h:
+
+../Commands/../types.h:
+
+../Commands/commands.h:
+
+../Commands/command.h:
+
+.././periph/keypad.h:
+
+.././periph/buzzer.h:
+
+.././periph/indicatorlights.h:
+
+.././periph/../types.h:
+
+.././periph/NXDisplay.h:
+
+.././periph/NeoPixel.h:
+
+.././periph/clocks.h:
 
 .././colors.h:
 
 .././Commands/command.h:
 
-.././Commands/../types.h:
-
-.././Commands/commands.h:
-
-.././Commands/command.h:
-
-.././buzzer.h:
-
-.././indicatorlights.h:
-
-.././NXDisplay.h:
-
-.././NeoPixel.h:
-
-.././clocks.h:
-
-c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\arm\arm-gnu-toolchain\lib\gcc\arm-none-eabi\6.3.1\include\stdbool.h:
+.././types.h:

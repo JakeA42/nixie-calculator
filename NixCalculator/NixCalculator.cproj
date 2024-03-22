@@ -123,11 +123,12 @@
     <ListValues>
       <Value>%24(PackRepoDir)\arm\CMSIS\5.4.0\CMSIS\Core\Include\</Value>
       <Value>%24(PackRepoDir)\atmel\SAMD21_DFP\1.3.395\samd21d\include</Value>
+      <Value>..</Value>
     </ListValues>
   </armgcc.compiler.directories.IncludePaths>
   <armgcc.compiler.optimization.level>Optimize debugging experience (-Og)</armgcc.compiler.optimization.level>
   <armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</armgcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <armgcc.compiler.optimization.DebugLevel>Maximum (-g3)</armgcc.compiler.optimization.DebugLevel>
+  <armgcc.compiler.optimization.DebugLevel>Default (-g2)</armgcc.compiler.optimization.DebugLevel>
   <armgcc.compiler.warnings.AllWarnings>True</armgcc.compiler.warnings.AllWarnings>
   <armgcc.linker.libraries.Libraries>
     <ListValues>
@@ -160,18 +161,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="buzzer.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="buzzer.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="clocks.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="clocks.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="colors.c">
       <SubType>compile</SubType>
     </Compile>
@@ -193,67 +182,85 @@
     <Compile Include="Device_Startup\system_samd21.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="DMA.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="DMA.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="gpio.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="gpio.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="indicatorlights.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="indicatorlights.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="keymap.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="keymap.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="keypad.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="keypad.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="NeoPixel.c">
+    <Compile Include="mathcore\mathcore_float.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="NeoPixel.h">
+    <Compile Include="mathcore\mathcore.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="NXDisplay.c">
+    <Compile Include="periph\buzzer.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="NXDisplay.h">
+    <Compile Include="periph\buzzer.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="pins.h">
+    <Compile Include="periph\clocks.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\clocks.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\DMA.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\DMA.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\gpio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\gpio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\indicatorlights.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\indicatorlights.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\keymap.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\keymap.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\keypad.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\keypad.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\NeoPixel.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\NeoPixel.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\NXDisplay.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\NXDisplay.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\pins.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\SPI.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\SPI.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\SSDisplay.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="periph\SSDisplay.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="rpn.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="SPI.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="SPI.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="SSDisplay.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="SSDisplay.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="types.h">
@@ -263,6 +270,8 @@
   <ItemGroup>
     <Folder Include="Device_Startup\" />
     <Folder Include="Commands" />
+    <Folder Include="mathcore" />
+    <Folder Include="periph" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Device_Startup\samd21j17d_flash.ld">

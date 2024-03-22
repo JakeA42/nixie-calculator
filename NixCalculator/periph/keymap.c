@@ -20,8 +20,39 @@
 */
 //const kp_key keypad_map[KEYPAD_NUM_COLS * KEYPAD_NUM_ROWS] = {0};
 
+
+color_rgb standard_color(const kp_key * currentkey, const calc_state_t * calc_state, const sys_state_t * sys_state) {
+	color_rgb c;
+	int available = 0;
+	// Modifiers always available (TODO: change this)
+	available = (currentkey->key_type & KEY_TYPE_MOD_MASK) ? 1 : 0;
+
+	if (sys_state->mods.shift && sys_state->mods.hyp) {
+		if (currentkey->shift_hyp_cmd && currentkey->shift_hyp_cmd->available != NULL) {
+			available = currentkey->shift_hyp_cmd->available(calc_state, sys_state);
+		}
+		c = available ? color_shift_hyp : color_shift_hyp_unavail;
+	} else if (sys_state->mods.shift) {
+		if (currentkey->shift_cmd && currentkey->shift_cmd->available != NULL) {
+			available = currentkey->shift_cmd->available(calc_state, sys_state);
+		}
+		c = available ? color_shift : color_shift_unavail;
+	} else if (sys_state->mods.hyp) {
+		if (currentkey->hyp_cmd && currentkey->hyp_cmd->available != NULL) {
+			available = currentkey->hyp_cmd->available(calc_state, sys_state);
+		}
+		c = available ? color_hyp : color_hyp_unavail;
+	} else {
+		if (currentkey->base_cmd && currentkey->base_cmd->available != NULL) {
+			available = currentkey->base_cmd->available(calc_state, sys_state);
+		}
+		c = available ? color_normal : color_normal_unavail;
+	}
+	return c;
+}
+
 // Determines the lighting of the re/im key based on the current view
-static color_rgb re_im_key_color(const calc_state_t * calc_state, const sys_state_t * sys_state) {
+static color_rgb re_im_key_color(const kp_key * currentkey, const calc_state_t * calc_state, const sys_state_t * sys_state) {
 	switch (sys_state->ui.cpx_view) {
 		case cv_re:
 		return sys_state->ui.view_is_real ? color_normal : color_cplx_re;
@@ -35,7 +66,7 @@ static color_rgb re_im_key_color(const calc_state_t * calc_state, const sys_stat
 	return color_off;
 }
 
-static color_rgb drg_key_color(const calc_state_t * calc_state, const sys_state_t * sys_state) {
+static color_rgb drg_key_color(const kp_key * currentkey, const calc_state_t * calc_state, const sys_state_t * sys_state) {
 	switch (sys_state->sys.angle_units) {
 		case au_deg:
 		return color_drg_d;
@@ -47,11 +78,11 @@ static color_rgb drg_key_color(const calc_state_t * calc_state, const sys_state_
 	return color_off;
 }
 
-static color_rgb shift_key_color(const calc_state_t * calc_state, const sys_state_t * sys_state) {
-	return sys_state->sys.modifiers.shift ? (sys_state->sys.modifiers.hyp ? color_shift_hyp : color_shift) : color_normal;
+static color_rgb shift_key_color(const kp_key * currentkey, const calc_state_t * calc_state, const sys_state_t * sys_state) {
+	return sys_state->mods.shift ? (sys_state->mods.hyp ? color_shift_hyp : color_shift) : color_normal;
 }
-static color_rgb hyp_key_color(const calc_state_t * calc_state, const sys_state_t * sys_state) {
-	return sys_state->sys.modifiers.hyp ? (sys_state->sys.modifiers.shift ? color_shift_hyp : color_hyp) : color_normal;
+static color_rgb hyp_key_color(const kp_key * currentkey, const calc_state_t * calc_state, const sys_state_t * sys_state) {
+	return sys_state->mods.hyp ? (sys_state->mods.shift ? color_shift_hyp : color_hyp) : color_normal;
 }
 
 
@@ -121,8 +152,8 @@ void build_keymap() {
 	// COL 2 ////////////////////////////
 	keypad_map[10] = (kp_key){ // C/AC
 		.key_type = KEY_TYPE_STD | KEY_TYPE_CLR,
-		.base_cmd = NULL, // TODO: C
-		.shift_cmd = NULL, // TODO: AC
+		.base_cmd = (cmd_generic*)cmd_clear, // TODO: C
+		.shift_cmd = (cmd_generic*)cmd_clearall, // TODO: AC
 		.hyp_cmd = NULL,
 		.shift_hyp_cmd = NULL,
 		.pixel_idx = 0,
@@ -130,7 +161,7 @@ void build_keymap() {
 	};
 	keypad_map[11] = (kp_key){ // bksp
 		.key_type = KEY_TYPE_STD,
-		.base_cmd = NULL, // TODO: bksp
+		.base_cmd = (cmd_generic*)cmd_bksp, // TODO: bksp
 		.shift_cmd = NULL,
 		.hyp_cmd = NULL,
 		.shift_hyp_cmd = NULL,
@@ -139,7 +170,7 @@ void build_keymap() {
 	};
 	keypad_map[12] = (kp_key){ // +/-
 		.key_type = KEY_TYPE_STD,
-		.base_cmd = NULL, // TODO: +/-
+		.base_cmd = (cmd_generic*)cmd_chs, // TODO: +/-
 		.shift_cmd = (cmd_generic*)cmd_abs,
 		.hyp_cmd = NULL,
 		.shift_hyp_cmd = NULL,
